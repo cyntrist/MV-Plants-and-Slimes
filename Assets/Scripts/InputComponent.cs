@@ -30,7 +30,7 @@ public class InputComponent : MonoBehaviour
     /// </summary>
     private Vector3 _worldPosition;
     /// <summary>
-    /// Position in game world
+    /// Position of plant intent in world
     /// </summary>
     private Vector3 _plantPosition;
     #endregion
@@ -57,10 +57,10 @@ public class InputComponent : MonoBehaviour
             _myMovementComponent.GoToPoint(_worldPosition); //GoToPoint() del _worldPosition (3D)
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) // click dcho
         {
-            _plantPosition = _myScreenToWorldComp.ScreenToWorldPoint(Input.mousePosition);
-            _myPlantingComponent.TryPlant(_plantPosition);
+            _plantPosition = _myScreenToWorldComp.ScreenToWorldPoint(Input.mousePosition); // 2D a 3D del intento de plantado
+            _myPlantingComponent.TryPlant(_plantPosition); // intenta plantar
         }
     }
 }

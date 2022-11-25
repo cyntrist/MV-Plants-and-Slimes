@@ -35,7 +35,7 @@ public class PlantingComponent : MonoBehaviour
     /// <summary>
     /// Layermast to filter desired layer
     /// </summary>
-    private LayerMask _myLayerMask = 1 << 0;
+    private LayerMask _myLayerMask = 1 << 8;
     /// <summary>
     /// Indicates the planting state
     /// </summary>
@@ -57,21 +57,15 @@ public class PlantingComponent : MonoBehaviour
     /// <returns></returns>
     private SoilComponent EvaluatePoint(Vector3 pointToEvaluate) // Devuelve el SoilComponent del Soil clicado solo si es soil
     {
-        SoilComponent soil = null;
+        Ray ray;
 
-        Ray ray = _camera.ScreenPointToRay(pointToEvaluate);
-        if (Physics.Raycast(ray, out _myHitInfo, Mathf.Infinity, _myLayerMask))
-        {
-            Debug.Log("La colisión es con un soil válido");
-            //_myHitInfo.point;
+        if (Physics.Raycast(_camera.transform.position, (pointToEvaluate - _camera.transform.position).normalized, out _myHitInfo, Mathf.Infinity, _myLayerMask))
+        { // raycast desde la posición de la cámara en dirección del vector normal hacia el punto a evaluar  (layer soil: 8)
+            Debug.Log("La colisión es con un soil válido.");
+            return _myHitInfo.collider.GetComponent<SoilComponent>(); 
         }
-        else //new
-        {
-            Debug.Log("No es válido.");
-            //transform.position;
-        }
-
-        return soil;
+        Debug.Log("No es válido.");
+        return null;
     }
     /// <summary>
     /// Tries to plant in a point. If valid point, sotres the component and goes to desired point
@@ -80,7 +74,7 @@ public class PlantingComponent : MonoBehaviour
 
     public void TryPlant(Vector3 plantingPoint) // Si el punto es valido, va hasta el hasta que colisione y se ejecute OnTriggerEnter
     {
-        if (EvaluatePoint(plantingPoint) == null)
+        if (EvaluatePoint(plantingPoint) != null)
         {
             //Debug.Log("Intento de plantado.");
             _myMovementComponent.GoToPoint(plantingPoint);

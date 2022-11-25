@@ -15,8 +15,8 @@ public class AppleComponent : MonoBehaviour
         if (gameManager != null)
         {
             gameManager.OnPickApple();
+            Destroy(this.gameObject);
         }
-        Destroy(this.gameObject);
     }
     #endregion
 }
