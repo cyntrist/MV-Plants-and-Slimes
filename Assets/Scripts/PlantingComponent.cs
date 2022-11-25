@@ -55,18 +55,15 @@ public class PlantingComponent : MonoBehaviour
     /// </summary>
     /// <param name="pointToEvaluate">Point to be evaluated</param>
     /// <returns></returns>
-    private SoilComponent EvaluatePoint(Vector3 pointToEvaluate) // Devuelve el SoilComponent del Soil clicado solo si es soil
+    private SoilComponent EvaluatePoint(Vector3 pointToEvaluate) // Devuelve el SoilComponent del Soil colisionado por el raycast 
     {
-        Ray ray;
-
         if (Physics.Raycast(_camera.transform.position, (pointToEvaluate - _camera.transform.position).normalized, out _myHitInfo, Mathf.Infinity, _myLayerMask))
         { // raycast desde la posición de la cámara en dirección del vector normal hacia el punto a evaluar  (layer soil: 8)
-            Debug.Log("La colisión es con un soil válido.");
             return _myHitInfo.collider.GetComponent<SoilComponent>(); 
         }
-        Debug.Log("No es válido.");
         return null;
     }
+
     /// <summary>
     /// Tries to plant in a point. If valid point, sotres the component and goes to desired point
     /// </summary>
@@ -74,12 +71,11 @@ public class PlantingComponent : MonoBehaviour
 
     public void TryPlant(Vector3 plantingPoint) // Si el punto es valido, va hasta el hasta que colisione y se ejecute OnTriggerEnter
     {
-        if (EvaluatePoint(plantingPoint) != null)
+        _desiredSoilComponent = EvaluatePoint(plantingPoint);
+        if (_desiredSoilComponent != null)
         {
-            //Debug.Log("Intento de plantado.");
             _myMovementComponent.GoToPoint(plantingPoint);
-        } 
-        //TODO
+        }
     }
 
     /// <summary>
@@ -88,7 +84,12 @@ public class PlantingComponent : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        //TODO // Si tengo manzana y pulso el clic derecho en un soil, la planta una vez colisiona con el desired soil.
+        if (other.GetComponent<SoilComponent>() == _desiredSoilComponent && _desiredSoilComponent != null && _desiredSoilComponent.IsPlanted == false)
+        { // tener en cuenta que una vez vuelvas a entrar al soil no plante una segunda manzana sin querer (seguramente con los estados se solucione)
+            Debug.Log("**Colisión con desired soil");
+            _desiredSoilComponent.Plant(_plantPrefab);
+        }
+        // Si tengo manzana y pulso el clic derecho en un soil, planta la manzana una vez colisiona con el desired soil.
     }
     #endregion
 
@@ -102,7 +103,6 @@ public class PlantingComponent : MonoBehaviour
         _myInputComponent = GetComponent<InputComponent>(); 
         _desiredSoilComponent = GetComponent<SoilComponent>();
 
-        //_myLayerMask = LayerMask.GetMask("Soil");
         _plantingState = PlantingStates.None;
     }
 }

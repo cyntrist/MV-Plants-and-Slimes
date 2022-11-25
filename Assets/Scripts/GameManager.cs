@@ -59,11 +59,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private int _nRound;
     /// <summary>
-    /// Level settings: Current amount of apples
+    /// Level settings: Current amount of apples / Manzanas pilladas (privado)
     /// </summary>
     private int _current;
     /// <summary>
-    /// Public access to current amount of apples
+    /// Public access to current amount of apples / Manzanas pilladas (publico)
     /// </summary>
     public int Current { get { return _current; } }
     #endregion
@@ -92,21 +92,28 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnPickApple()
     {
-        Debug.Log("Apple pillada.");
+        _current++;
+        Debug.Log("Apple pillada." + _current);
     }
     /// <summary>
     /// Methods to be called when an apple is planted
     /// </summary>
     public void OnPlantApple()
     {
-        //TODO
+        if (_current > 0)
+        {
+            _current--;
+            Debug.Log("Manzana plantada:" + _current);
+        }
     }
     /// <summary>
     /// GameManager instance initialization
     /// </summary>
     private void Awake()
     {
-        //TODO
+        _currentState = GameStates.START;
+        _nextState = GameStates.GAME;
+        EnterState(_nextState);
     }
     /// <summary>
     /// Method to be called when game enters a new state
@@ -114,7 +121,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">New state</param>
     private void EnterState(GameStates newState)
     {
-        //TODO
+        _currentState = newState;
     }
     /// <summary>
     /// Methods to be called when a game state is exited
@@ -122,7 +129,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Exited game state</param>
     private void ExitState(GameStates newState)
     {
-        //TODO
+        _currentState = newState; // no se si habra que mejorarlo?
     }
     /// <summary>
     /// Method called to uptate the game manager according to the current state
@@ -130,7 +137,14 @@ public class GameManager : MonoBehaviour
     /// <param name="state">Current game state</param>
     private void UpdateState(GameStates state)
     {
-        //TODO
+        if (state == GameStates.START)
+        {
+            _nextState = GameStates.GAME;
+        }
+        else if (state == GameStates.GAME)
+        {
+            _nextState = GameStates.GAMEOVER;
+        } 
     }
     /// <summary>
     /// Public method for other scripts to request a game state change
@@ -138,7 +152,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Requested state</param>
     public void RequestStateChange(GameManager.GameStates newState)
     {
-        //TODO
+        EnterState(newState);
     }
     /// <summary>
     /// Loads a new level choosing among the available levels.
@@ -166,6 +180,7 @@ public class GameManager : MonoBehaviour
         //_UIManager = GameObject.Find("UI").GetComponent<UIManager>();
         _levelManager = GameObject.Find("Level").GetComponent<LevelManager>();
         _levelManager.SetPlayer(_player);
+        _current = 0;
     }
 
     /// <summary>
