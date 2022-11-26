@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -63,7 +64,8 @@ public class UIManager : MonoBehaviour
     /// <param name="remainingTime">Current remaining time</param>
     public void UpdateGameHUD(int currentApples, float remainingTime)
     {
-        //TODO
+        _currentTMP.text = "Manzanas: " + currentApples.ToString();
+        _remainingTimeTMP.text = "Tiempo restante: " + remainingTime.ToString();
     }
     /// <summary>
     /// Sets up HUD after Level's load
@@ -73,7 +75,10 @@ public class UIManager : MonoBehaviour
     /// <param name="remainingTime">Remaining time</param>
     public void SetUpGameHUD(int nRound, int goal, float remainingTime)
     {
-        //TOD
+        _nRoundTMP.text = "Ronda: " + nRound.ToString();
+        _goalTMP.text = "Meta: " + goal.ToString();
+        _remainingTimeTMP.text = "Tiempo restante: " + remainingTime.ToString();
+        _currentTMP.text = "0";
     }
     /// <summary>
     /// Sets the required menu according to Game State
@@ -81,7 +86,14 @@ public class UIManager : MonoBehaviour
     /// <param name="newMenu">New menu Game State</param>
     public void SetMenu(GameManager.GameStates newMenu)
     {
-        //TOD
+        if (newMenu != _activeMenu)
+        {
+            //_menus[(int)_activeMenu].SetActive(false);
+            _mainMenu.SetActive(false);
+            _activeMenu = newMenu;
+            _gameplayHUD.SetActive(true);
+            //_menus[(int)_activeMenu].SetActive(true); // da error nullref??
+        }
     }
     #endregion
 
@@ -90,6 +102,11 @@ public class UIManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        
+        _menus = new GameObject[3];
+        _menus[0] = _mainMenu;
+        _menus[1] = _gameplayHUD;
+        _menus[2] = _gameOverMenu;
+        _activeMenu = GameManager.GameStates.START;
+        GameManager.Instance.RegisterUIManager(this);
     }
 }

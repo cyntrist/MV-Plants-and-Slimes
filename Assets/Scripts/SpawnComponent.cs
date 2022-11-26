@@ -42,7 +42,8 @@ public class SpawnComponent : MonoBehaviour
     /// </summary>
     void Start()
     {
-        
+        _myTransform = transform;
+        _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval);
     }
 
     /// <summary>
@@ -50,6 +51,14 @@ public class SpawnComponent : MonoBehaviour
     /// </summary>
     void Update()
     {
-        
+        if (_apple == null) // si acaba de ser plantado o ha cogido la manzana
+        {
+            _timeToSpawn -= Time.deltaTime; // cuenta atrás
+            if (_timeToSpawn <= 0)
+            {
+                _apple = Object.Instantiate(_applePrefab, _myTransform.position, Quaternion.identity); // se crea la manzana (si la pilla se vuelve null)
+                _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval); // nuevo intervalo random
+            }
+        }
     }
 }

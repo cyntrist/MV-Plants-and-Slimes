@@ -9,9 +9,6 @@ public class SoilComponent : MonoBehaviour
     /// Reference to own transform
     /// </summary>
     private Transform _myTransform;
-
-    // NEW
-    private GameManager _gameManager;
     #endregion
 
     #region properties
@@ -35,11 +32,11 @@ public class SoilComponent : MonoBehaviour
     /// <param name="newPlantPrefab"></param>
     public void Plant(GameObject newPlantPrefab)
     {
-        if (!_isPlanted && _gameManager.Current > 0)
+        if (!_isPlanted && GameManager.Instance.Current > 0)
         {
-            _gameManager.OnPlantApple();
+            GameManager.Instance.OnPlantApple();
             _isPlanted = true;
-            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.identity);
+            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0));
         }
     }
     #endregion
@@ -50,7 +47,6 @@ public class SoilComponent : MonoBehaviour
     void Start()
     {
         _myTransform = transform;
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _isPlanted = false;
     }
 }

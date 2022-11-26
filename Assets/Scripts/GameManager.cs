@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -76,7 +77,7 @@ public class GameManager : MonoBehaviour
 
     public void RegisterUIManager(UIManager uiManager)
     {
-        //TODO
+        _UIManager = uiManager;
     }
 
     /// <summary>
@@ -85,7 +86,7 @@ public class GameManager : MonoBehaviour
     /// <param name="levelManager">Level manager to register</param>
     public void RegisterLevelManager(LevelManager levelManager)
     {
-        //TODO
+        _levelManager = levelManager;
     }
     /// <summary>
     /// Method to be called when an apple is picked
@@ -93,7 +94,6 @@ public class GameManager : MonoBehaviour
     public void OnPickApple()
     {
         _current++;
-        Debug.Log("Apple pillada." + _current);
     }
     /// <summary>
     /// Methods to be called when an apple is planted
@@ -103,7 +103,6 @@ public class GameManager : MonoBehaviour
         if (_current > 0)
         {
             _current--;
-            Debug.Log("Manzana plantada:" + _current);
         }
     }
     /// <summary>
@@ -111,9 +110,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        _currentState = GameStates.START;
-        _nextState = GameStates.GAME;
-        EnterState(_nextState);
+        _instance = this; //******************hasta aquí guay
     }
     /// <summary>
     /// Method to be called when game enters a new state
@@ -121,7 +118,30 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">New state</param>
     private void EnterState(GameStates newState)
     {
+        switch(newState)
+        {
+            case GameStates.START:
+                //_currentState = GameStates.START;
+                _UIManager.SetMenu(GameStates.START);
+                Debug.Log("***START");
+                break;
+            case GameStates.GAME:
+                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
+                //_currentState = GameStates.GAME;
+                _UIManager.SetMenu(GameStates.GAME);
+                _levelManager.SetPlayer(_player);
+                _current = 0;
+                LoadLevel();
+                Debug.Log("***GAME");
+                break;
+            case GameStates.GAMEOVER:
+                _UIManager.SetMenu(GameStates.GAMEOVER);
+                //_currentState = GameStates.GAMEOVER;
+                Debug.Log("***GAMEOVER");
+                break;
+        }
         _currentState = newState;
+        Debug.Log("***" + _currentState);
     }
     /// <summary>
     /// Methods to be called when a game state is exited
@@ -129,7 +149,10 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Exited game state</param>
     private void ExitState(GameStates newState)
     {
-        _currentState = newState; // no se si habra que mejorarlo?
+        if (newState == GameStates.GAME)
+        {
+            UnloadLevel();
+        }
     }
     /// <summary>
     /// Method called to uptate the game manager according to the current state
@@ -168,7 +191,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UnloadLevel()
     {
-        //TODO
+        _player.SetActive(false);
+        Object.Destroy(_levelManager.gameObject);
     }
     #endregion
 
@@ -177,10 +201,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        //_UIManager = GameObject.Find("UI").GetComponent<UIManager>();
+        _UIManager  = GameObject.Find("UI").GetComponent<UIManager>();
         _levelManager = GameObject.Find("Level").GetComponent<LevelManager>();
-        _levelManager.SetPlayer(_player);
-        _current = 0;
+        _currentState = GameStates.START;
+        _nextState = GameStates.GAME;
+        EnterState(_nextState);
     }
 
     /// <summary>
@@ -189,6 +214,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-        
+        if (_currentState == GameStates.GAME)
+        {
+            _UIManager.UpdateGameHUD(_nRound, _remainingTime);
+        }
     }
 }

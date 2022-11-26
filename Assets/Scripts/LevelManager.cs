@@ -18,7 +18,9 @@ public class LevelManager : MonoBehaviour
     /// <param name="player"></param>
     public void SetPlayer(GameObject player)
     {
+        GameManager.Instance.RegisterLevelManager(this);
         player.transform.position = _spawnPoint.transform.position;
+        player.transform.rotation = _spawnPoint.transform.rotation;
         player.SetActive(true);
     }
     #endregion
