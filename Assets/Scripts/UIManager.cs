@@ -88,11 +88,9 @@ public class UIManager : MonoBehaviour
     {
         if (newMenu != _activeMenu)
         {
-            //_menus[(int)_activeMenu].SetActive(false);
-            _mainMenu.SetActive(false);
+            _menus[(int) _activeMenu].SetActive(false);
             _activeMenu = newMenu;
-            _gameplayHUD.SetActive(true);
-            //_menus[(int)_activeMenu].SetActive(true); // da error nullref??
+            _menus[(int)_activeMenu].SetActive(true); 
         }
     }
     #endregion
@@ -106,7 +104,7 @@ public class UIManager : MonoBehaviour
         _menus[0] = _mainMenu;
         _menus[1] = _gameplayHUD;
         _menus[2] = _gameOverMenu;
-        _activeMenu = GameManager.GameStates.START;
+        _activeMenu = GameManager.Instance.CurrentState;
         GameManager.Instance.RegisterUIManager(this);
     }
 }

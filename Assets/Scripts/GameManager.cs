@@ -116,32 +116,26 @@ public class GameManager : MonoBehaviour
     /// Method to be called when game enters a new state
     /// </summary>
     /// <param name="newState">New state</param>
-    private void EnterState(GameStates newState)
+    public void EnterState(GameStates newState)
     {
         switch(newState)
         {
             case GameStates.START:
-                //_currentState = GameStates.START;
                 _UIManager.SetMenu(GameStates.START);
-                Debug.Log("***START");
                 break;
             case GameStates.GAME:
                 _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
-                //_currentState = GameStates.GAME;
                 _UIManager.SetMenu(GameStates.GAME);
                 _levelManager.SetPlayer(_player);
                 _current = 0;
                 LoadLevel();
-                Debug.Log("***GAME");
                 break;
             case GameStates.GAMEOVER:
                 _UIManager.SetMenu(GameStates.GAMEOVER);
-                //_currentState = GameStates.GAMEOVER;
-                Debug.Log("***GAMEOVER");
                 break;
         }
         _currentState = newState;
-        Debug.Log("***" + _currentState);
+        Debug.Log("CURRENT" + _currentState);
     }
     /// <summary>
     /// Methods to be called when a game state is exited
@@ -175,7 +169,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Requested state</param>
     public void RequestStateChange(GameManager.GameStates newState)
     {
-        EnterState(newState);
+        _nextState = newState;
     }
     /// <summary>
     /// Loads a new level choosing among the available levels.
@@ -203,8 +197,8 @@ public class GameManager : MonoBehaviour
     {
         _UIManager  = GameObject.Find("UI").GetComponent<UIManager>();
         _levelManager = GameObject.Find("Level").GetComponent<LevelManager>();
-        _currentState = GameStates.START;
-        _nextState = GameStates.GAME;
+        _currentState = GameStates.GAMEOVER;
+        _nextState = GameStates.START;
         EnterState(_nextState);
     }
 
@@ -215,8 +209,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (_currentState == GameStates.GAME)
-        {
-            _UIManager.UpdateGameHUD(_nRound, _remainingTime);
-        }
+            _UIManager.UpdateGameHUD(_current, _remainingTime);
     }
 }
