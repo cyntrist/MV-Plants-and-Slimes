@@ -72,7 +72,6 @@ public class MovementComponent : MonoBehaviour
         }
         else
         {
-            _ = new Vector3 (0,0,0);
             enabled = false;
         }
     }

@@ -65,7 +65,7 @@ public class UIManager : MonoBehaviour
     public void UpdateGameHUD(int currentApples, float remainingTime)
     {
         _currentTMP.text = "Manzanas: " + currentApples.ToString();
-        _remainingTimeTMP.text = "Tiempo restante: " + remainingTime.ToString();
+        _remainingTimeTMP.text = "Tiempo restante: " + (int) remainingTime;
     }
     /// <summary>
     /// Sets up HUD after Level's load

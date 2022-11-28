@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     static private GameManager _instance;
     /// <summary>
-    /// Public reference to GameManager instance
+    /// Public reference to GameManager instance / MÉTODO GETTER para recibir el valor en otros scripts
     /// </summary>
     static public GameManager Instance { get { return _instance; } }
     /// <summary>
@@ -44,9 +44,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private GameManager.GameStates _nextState;
     /// <summary>
-    /// Public access to Current State
+    /// Public access to Current State / MÉTODO GETTER para recibir el valor en otros scripts
     /// </summary>
-    public GameManager.GameStates CurrentState { get { return _currentState; } }
+    public GameManager.GameStates CurrentState { get { return _currentState; } } 
     /// <summary>
     /// Level settings: Goal
     /// </summary>
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private int _current;
     /// <summary>
-    /// Public access to current amount of apples / Manzanas pilladas (publico)
+    /// Public access to current amount of apples / Manzanas pilladas (publico) MÉTODO GETTER para recibir el valor en otros scripts
     /// </summary>
     public int Current { get { return _current; } }
     #endregion
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Public methods to register Level Manager
+    /// Public methods to register Level Manager 
     /// </summary>
     /// <param name="levelManager">Level manager to register</param>
     public void RegisterLevelManager(LevelManager levelManager)
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnPlantApple()
     {
-        if (_current > 0)
+        if (_current > 0) 
         {
             _current--;
         }
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        _instance = this; //******************hasta aquí guay
+        _instance = this; // Para que éste GameManager sea accesible a través de GameManager.Instance en otros scripts y objetos
     }
     /// <summary>
     /// Method to be called when game enters a new state
@@ -118,22 +118,22 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">New state</param>
     public void EnterState(GameStates newState)
     {
-        switch(newState)
-        {
+        switch(newState) // Diferentes comportamientos según estado al que se entra
+        { // En sí, solo cambia el grupo de UI por cada estado y en GAME carga el nivel
             case GameStates.START:
                 _UIManager.SetMenu(GameStates.START);
                 break;
             case GameStates.GAME:
-                LoadLevel(); // debe ir primero para que entren los valores de LevelData y sean cargados ahora en el UI
+                LoadLevel(); // debe ir primero para que entren los valores de LevelData y sean cargados ahora en el HUD
 
                 _UIManager.SetMenu(GameStates.GAME);
-                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
+                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime); // Inicializa el HUD
                 break;
             case GameStates.GAMEOVER:
                 _UIManager.SetMenu(GameStates.GAMEOVER);
                 break;
         }
-        _currentState = newState;
+        _currentState = newState; // Finaliza el cambio
         Debug.Log("CURRENT: " + _currentState);
     }
     /// <summary>
@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Exited game state</param>
     private void ExitState(GameStates newState)
     {
-        if (newState == GameStates.GAME)
+        if (newState == GameStates.GAME) // ??? no estoy muy segura pero asi funciona guay, simplemente quita el nivel y el jugador
         {
             UnloadLevel();
         }
@@ -153,25 +153,24 @@ public class GameManager : MonoBehaviour
     /// <param name="state">Current game state</param>
     private void UpdateState(GameStates state)
     {
-        if (_currentState == GameStates.GAME)
+        if (_currentState == GameStates.GAME) // En el resto de estados no hace falta nada
         {
-            _remainingTime -= Time.deltaTime;
-            
-            if (_remainingTime < 0)
+            _remainingTime -= Time.deltaTime; // Cuenta atrás
+
+            if (_current >= _goal) // Si se alcanza la meta de manzanas, quita y repone un nivel aleatorio y actualiza los datos en el HUD
             {
-                UnloadLevel();
-                _nextState = GameStates.GAMEOVER;
-            }
-            if (_current >= _goal)
-            {
-                //ExitState(GameStates.GAME);
-                //EnterState(GameStates.GAME);
                 UnloadLevel();
                 LoadLevel();
                 _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
-            } 
+            }
+
+            if (_remainingTime < 0) // Si se acaba el tiempo, salimos del estado de GAME e intentamos entrar en GAMEOVER
+            {
+                ExitState(_currentState);
+                _nextState = GameStates.GAMEOVER;
+            }
             
-            _UIManager.UpdateGameHUD(_current, _remainingTime);
+            _UIManager.UpdateGameHUD(_current, _remainingTime); // Actualiza la información del HUD cada frame
         }
     }
     /// <summary>
@@ -188,15 +187,23 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void LoadLevel()
     {
-        int num = Random.Range(0, _levels.Length);
-        GameObject level = Object.Instantiate(_levels[num]._levelPrefab, Vector3.zero, Quaternion.identity);
+        // Random generation of level
+        int rdm = Random.Range(0, _levels.Length);
+        GameObject level = Object.Instantiate(_levels[rdm]._levelPrefab, Vector3.zero, Quaternion.identity);
+
+        // Setting the player up
         _levelManager = level.GetComponent<LevelManager>();
         _levelManager.SetPlayer(_player);
         _player.SetActive(true);
-        _goal = _levels[num]._levelGoal;
-        _remainingTime = _levels[num]._matchDuration;
-        _current = 0;
+
+        // Setting the data up
         _nRound++;
+        _remainingTime = _levels[rdm]._matchDuration;
+        _goal = _levels[rdm]._levelGoal;
+        _current = 0;
+
+        // Avoiding undesired movement at Loading()
+        _player.GetComponent<MovementComponent>().enabled = false;
     }
     /// <summary>
     /// Unloads the current level.
@@ -204,7 +211,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UnloadLevel()
     {
-        _player.SetActive(false);
+        _player.SetActive(false); 
         Object.Destroy(_levelManager.gameObject);
     }
     #endregion
@@ -214,8 +221,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _currentState = GameStates.GAMEOVER;
-        _nextState = GameStates.START;
+        _currentState = GameStates.GAME;
+        _nextState = GameStates.START; // Estado inicial, es diferente al current para que el EnterState del primer update se realice
     }
 
     /// <summary>
@@ -224,8 +231,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (_nextState != _currentState)
-            EnterState(_nextState);
-        UpdateState(_currentState);
+        if (_nextState != _currentState) // Si se requiere cambiar de estado ( si current == next es que seguimos en el mismo)
+        {
+            EnterState(_nextState); // Entramos al siguiente estado
+        }
+        UpdateState(_currentState); // Update según el estado
     }
 }
