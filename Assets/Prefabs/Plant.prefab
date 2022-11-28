@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2906742830762671423}
   - component: {fileID: 2906742830763671551}
   - component: {fileID: 7999037779904706423}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8706956189622931129}
   - component: {fileID: 6272382598375806081}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -36,7 +36,7 @@ public class SoilComponent : MonoBehaviour
         {
             GameManager.Instance.OnPlantApple();
             _isPlanted = true;
-            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0));
+            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0)).transform.parent = _myTransform;
         }
     }
     #endregion

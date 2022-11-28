@@ -124,18 +124,17 @@ public class GameManager : MonoBehaviour
                 _UIManager.SetMenu(GameStates.START);
                 break;
             case GameStates.GAME:
-                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
+                LoadLevel(); // debe ir primero para que entren los valores de LevelData y sean cargados ahora en el UI
+
                 _UIManager.SetMenu(GameStates.GAME);
-                _levelManager.SetPlayer(_player);
-                _current = 0;
-                LoadLevel();
+                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
                 break;
             case GameStates.GAMEOVER:
                 _UIManager.SetMenu(GameStates.GAMEOVER);
                 break;
         }
         _currentState = newState;
-        Debug.Log("CURRENT" + _currentState);
+        Debug.Log("CURRENT: " + _currentState);
     }
     /// <summary>
     /// Methods to be called when a game state is exited
@@ -154,14 +153,26 @@ public class GameManager : MonoBehaviour
     /// <param name="state">Current game state</param>
     private void UpdateState(GameStates state)
     {
-        if (state == GameStates.START)
+        if (_currentState == GameStates.GAME)
         {
-            _nextState = GameStates.GAME;
+            _remainingTime -= Time.deltaTime;
+            
+            if (_remainingTime < 0)
+            {
+                UnloadLevel();
+                _nextState = GameStates.GAMEOVER;
+            }
+            if (_current >= _goal)
+            {
+                //ExitState(GameStates.GAME);
+                //EnterState(GameStates.GAME);
+                UnloadLevel();
+                LoadLevel();
+                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
+            } 
+            
+            _UIManager.UpdateGameHUD(_current, _remainingTime);
         }
-        else if (state == GameStates.GAME)
-        {
-            _nextState = GameStates.GAMEOVER;
-        } 
     }
     /// <summary>
     /// Public method for other scripts to request a game state change
@@ -177,7 +188,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void LoadLevel()
     {
-        //TODO
+        int num = Random.Range(0, _levels.Length);
+        GameObject level = Object.Instantiate(_levels[num]._levelPrefab, Vector3.zero, Quaternion.identity);
+        _levelManager = level.GetComponent<LevelManager>();
+        _levelManager.SetPlayer(_player);
+        _player.SetActive(true);
+        _goal = _levels[num]._levelGoal;
+        _remainingTime = _levels[num]._matchDuration;
+        _current = 0;
+        _nRound++;
     }
     /// <summary>
     /// Unloads the current level.
@@ -195,11 +214,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _UIManager  = GameObject.Find("UI").GetComponent<UIManager>();
-        _levelManager = GameObject.Find("Level").GetComponent<LevelManager>();
         _currentState = GameStates.GAMEOVER;
         _nextState = GameStates.START;
-        EnterState(_nextState);
     }
 
     /// <summary>
@@ -208,7 +224,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (_currentState == GameStates.GAME)
-            _UIManager.UpdateGameHUD(_current, _remainingTime);
+        if (_nextState != _currentState)
+            EnterState(_nextState);
+        UpdateState(_currentState);
     }
 }

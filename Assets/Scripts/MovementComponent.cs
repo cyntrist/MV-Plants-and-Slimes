@@ -34,7 +34,7 @@ public class MovementComponent : MonoBehaviour
     /// <summary>
     /// Movement speed vector
     /// </summary>
-    private Vector3 _movementSpeedVector; // INUTIL???
+    private Vector3 _movementSpeedVector; // UNUSED
     #endregion
 
     #region methods
@@ -45,7 +45,7 @@ public class MovementComponent : MonoBehaviour
     public void GoToPoint(Vector3 targetPoint) //targetPoint será el worldPosition
     {
         _myTargetPoint = targetPoint;
-        this.enabled = true; //cuando reciba input, se activara
+        enabled = true; //cuando reciba input, se activara
     }
     #endregion
 
@@ -56,7 +56,7 @@ public class MovementComponent : MonoBehaviour
     {
         _myTransform = GetComponent<Transform>();
         _myCharacterController = GetComponent<CharacterController>();
-        this.enabled = false;
+        enabled = false;
     }
 
     /// <summary>
@@ -70,6 +70,10 @@ public class MovementComponent : MonoBehaviour
             offset = offset.normalized * _movementSpeed; // sentido * velocidad a la que queremos ir
             _myCharacterController.Move(offset * Time.deltaTime);
         }
-        else this.enabled = false;
+        else
+        {
+            _ = new Vector3 (0,0,0);
+            enabled = false;
+        }
     }
 }

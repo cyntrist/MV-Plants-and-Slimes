@@ -6,7 +6,8 @@ public class ButtonManager : MonoBehaviour
 {
     public void OnButtonPress()
     {
-        GameManager.Instance.EnterState(GameManager.GameStates.GAME);
         Debug.Log("Botón pulsado.");
+        GameManager.Instance.EnterState(GameManager.GameStates.GAME);
+        GameManager.Instance.RequestStateChange(GameManager.GameStates.GAME);
     }
 }

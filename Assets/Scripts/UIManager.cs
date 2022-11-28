@@ -78,7 +78,6 @@ public class UIManager : MonoBehaviour
         _nRoundTMP.text = "Ronda: " + nRound.ToString();
         _goalTMP.text = "Meta: " + goal.ToString();
         _remainingTimeTMP.text = "Tiempo restante: " + remainingTime.ToString();
-        _currentTMP.text = "0";
     }
     /// <summary>
     /// Sets the required menu according to Game State

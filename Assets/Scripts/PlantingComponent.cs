@@ -57,7 +57,7 @@ public class PlantingComponent : MonoBehaviour
     /// <returns></returns>
     private SoilComponent EvaluatePoint(Vector3 pointToEvaluate) // Devuelve el SoilComponent del Soil colisionado por el raycast 
     {
-        Ray ray = new Ray(_camera.transform.position, (pointToEvaluate -_camera.transform.position).normalized);
+        Ray ray = new Ray(_camera.transform.position, (pointToEvaluate - _camera.transform.position).normalized);
         if (Physics.Raycast(ray, out _myHitInfo, Mathf.Infinity, _myLayerMask))
         { // raycast desde la posición de la cámara en dirección del vector normal hacia el punto a evaluar  (layer soil: 8)
             return _myHitInfo.collider.GetComponent<SoilComponent>(); 
