@@ -51,7 +51,7 @@ public class SpawnComponent : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (_apple == null) // si acaba de ser plantado o ha cogido la manzana
+        if (_apple == null) // si acaba de ser plantado o ha cogido la manzana (en general si no hay manzana plantada, solo puede haber una)
         {
             _timeToSpawn -= Time.deltaTime; // cuenta atrás
             if (_timeToSpawn <= 0)
