@@ -19,7 +19,7 @@ public class ScreenToWorldComponent : MonoBehaviour
     /// <summary>
     /// References to camera transform
     /// </summary>
-    private Transform _cameraTransform;
+    private Transform _cameraTransform; // UNUSED
     #endregion
 
     #region properties
@@ -30,7 +30,7 @@ public class ScreenToWorldComponent : MonoBehaviour
     /// <summary>
     /// Layermask to filter desired layer
     /// </summary>
-    private LayerMask _myLayerMask = 1 << 0; // Colision entre capas (semantica rara)
+    private LayerMask _myLayerMask = 1 << 0; // Colision entre capas (Layer: default 0; Player debería estar en IgnoreRaycast 1)
     #endregion
 
     #region methods
@@ -39,18 +39,16 @@ public class ScreenToWorldComponent : MonoBehaviour
     /// </summary>
     /// <param name="screenPoint"></param>
     /// <returns></returns>
-    public Vector3 ScreenToWorldPoint(Vector2 screenPoint) //crea Vector3D (en el plano) desde Vector2D (de la pantalla)
-    {
-        Ray ray = _camera.ScreenPointToRay(screenPoint);
+    public Vector3 ScreenToWorldPoint(Vector2 screenPoint)
+    { //crea Vector3D (en el plano) desde Vector2D (de la pantalla)
+        Ray ray = _camera.ScreenPointToRay(screenPoint); // rayo desde la posición en la pantalla
         if (Physics.Raycast(ray, out _myRaycastHit, _maxDistance, _myLayerMask))
         {
-            //Debug.Log("La colisión del raycast es en: " + _myRaycastHit.transform + ", " + _myRaycastHit.point);
-            return _myRaycastHit.point;
+            return _myRaycastHit.point; // devuelve la posición de colisión
         }
         else //new
         {
-            //Debug.Log("No hay colisión del raycast.");
-            return transform.position; 
+            return transform.position; // se queda en el sitio si no choca
         }
     }
     #endregion
@@ -61,6 +59,5 @@ public class ScreenToWorldComponent : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-        _cameraTransform = _camera.transform;
     }
 }

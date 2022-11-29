@@ -32,11 +32,11 @@ public class SoilComponent : MonoBehaviour
     /// <param name="newPlantPrefab"></param>
     public void Plant(GameObject newPlantPrefab)
     {
-        if (!_isPlanted && GameManager.Instance.Current > 0)
+        if (!_isPlanted && GameManager.Instance.Current > 0) // Si no hay nada plantado y tiene manzanas
         {
-            GameManager.Instance.OnPlantApple();
-            _isPlanted = true;
-            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0)).transform.parent = _myTransform;
+            GameManager.Instance.OnPlantApple(); // Resta una manzana
+            _isPlanted = true; // Este soil queda plantado
+            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0)).transform.parent = _myTransform; // Instanciación del prefab Plant a 180º de su ángulo normal (mótivos meramente estéticos) en la posición del Soil
         }
     }
     #endregion

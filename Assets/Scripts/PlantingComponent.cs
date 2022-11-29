@@ -57,12 +57,12 @@ public class PlantingComponent : MonoBehaviour
     /// <returns></returns>
     private SoilComponent EvaluatePoint(Vector3 pointToEvaluate) // Devuelve el SoilComponent del Soil colisionado por el raycast 
     {
-        Ray ray = new Ray(_camera.transform.position, (pointToEvaluate - _camera.transform.position).normalized);
+        Ray ray = new(_camera.transform.position, (pointToEvaluate - _camera.transform.position).normalized);
         if (Physics.Raycast(ray, out _myHitInfo, Mathf.Infinity, _myLayerMask))
         { // raycast desde la posición de la cámara en dirección del vector normal hacia el punto a evaluar  (layer soil: 8)
             return _myHitInfo.collider.GetComponent<SoilComponent>(); 
         }
-        return null;
+        return null; // si no colisiona con nada
     }
 
     /// <summary>
@@ -72,14 +72,14 @@ public class PlantingComponent : MonoBehaviour
 
     public void TryPlant(Vector3 plantingPoint) // Si el punto es valido, va hasta el hasta que colisione y se ejecute OnTriggerEnter
     {
-        if (GameManager.Instance.Current > 0 && _plantingState == PlantingStates.None)
+        if (GameManager.Instance.Current > 0 && _plantingState == PlantingStates.None) // Si tiene manzanas y no está plantando
         {
-            _desiredSoilComponent = EvaluatePoint(plantingPoint);
+            _desiredSoilComponent = EvaluatePoint(plantingPoint); // Raycast
             if (_desiredSoilComponent != null)
             {
-                _myMovementComponent.GoToPoint(plantingPoint);
-                _myInputComponent.enabled = false;
-                _plantingState = PlantingStates.IsPlanting;
+                _myMovementComponent.GoToPoint(plantingPoint); // Movimiento
+                _myInputComponent.enabled = false; // si cambia de trayecto en el camino nunca vuelve al estado inicial
+                _plantingState = PlantingStates.IsPlanting; // Cambio de estado
             }
         }
     }
@@ -91,10 +91,10 @@ public class PlantingComponent : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<SoilComponent>() == _desiredSoilComponent && _plantingState == PlantingStates.IsPlanting)
-        { // tener en cuenta que una vez vuelvas a entrar al soil no plante una segunda manzana sin querer (seguramente con los estados se solucione)
-            _desiredSoilComponent.Plant(_plantPrefab);
-            _myInputComponent.enabled = true;
-            _plantingState = PlantingStates.None;
+        { // si el soil con el que colisiona es el deseado y el estado es el de plantando
+            _desiredSoilComponent.Plant(_plantPrefab); // instanciación de planta
+            _myInputComponent.enabled = true; // reactiva input
+            _plantingState = PlantingStates.None; // vuelta al estado anterior
         }
     }
     #endregion

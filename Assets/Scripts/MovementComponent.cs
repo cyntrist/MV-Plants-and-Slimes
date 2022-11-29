@@ -42,7 +42,7 @@ public class MovementComponent : MonoBehaviour
     /// Method to move towards desired point
     /// </summary>
     /// <param name="targetPoint"></param>
-    public void GoToPoint(Vector3 targetPoint) //targetPoint será el worldPosition
+    public void GoToPoint(Vector3 targetPoint) 
     {
         _myTargetPoint = targetPoint;
         enabled = true; //cuando reciba input, se activara
@@ -56,7 +56,7 @@ public class MovementComponent : MonoBehaviour
     {
         _myTransform = GetComponent<Transform>();
         _myCharacterController = GetComponent<CharacterController>();
-        enabled = false;
+        enabled = false; // desactiva este componente al empezar
     }
 
     /// <summary>

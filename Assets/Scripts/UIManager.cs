@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="currentApples">Current number of collected apples</param>
     /// <param name="remainingTime">Current remaining time</param>
-    public void UpdateGameHUD(int currentApples, float remainingTime)
+    public void UpdateGameHUD(int currentApples, float remainingTime) // Actualiza en cada frame el valor del tiempo y las manzanas
     {
         _currentTMP.text = "Manzanas: " + currentApples.ToString();
         _remainingTimeTMP.text = "Tiempo restante: " + (int) remainingTime;
@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
     /// <param name="nRound">Round number</param>
     /// <param name="goal">Level goal</param>
     /// <param name="remainingTime">Remaining time</param>
-    public void SetUpGameHUD(int nRound, int goal, float remainingTime)
+    public void SetUpGameHUD(int nRound, int goal, float remainingTime) // Actualiza *sólo cada vez que se carga un nivel* los datos de ese nivel (Ronda y meta)
     {
         _nRoundTMP.text = "Ronda: " + nRound.ToString();
         _goalTMP.text = "Meta: " + goal.ToString();
@@ -84,13 +84,10 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="newMenu">New menu Game State</param>
     public void SetMenu(GameManager.GameStates newMenu)
-    {
-        if (newMenu != _activeMenu)
-        {
-            _menus[(int) _activeMenu].SetActive(false);
-            _activeMenu = newMenu;
-            _menus[(int)_activeMenu].SetActive(true); 
-        }
+    { // desactiva el menú anterior, actualiza el actual y activa el actual
+        _menus[(int) _activeMenu].SetActive(false);
+        _activeMenu = newMenu;
+        _menus[(int)_activeMenu].SetActive(true); 
     }
     #endregion
 
@@ -99,11 +96,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _menus = new GameObject[3];
+        _menus = new GameObject[3]; // creación del array de menús y asignación
         _menus[0] = _mainMenu;
         _menus[1] = _gameplayHUD;
         _menus[2] = _gameOverMenu;
-        _activeMenu = GameManager.Instance.CurrentState;
-        GameManager.Instance.RegisterUIManager(this);
+        _activeMenu = GameManager.Instance.CurrentState; // asocia el menú actual con el estado actual
+
+        GameManager.Instance.RegisterUIManager(this); // registra este UI manager con la instancia del Game manager
     }
 }

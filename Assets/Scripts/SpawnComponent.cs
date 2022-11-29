@@ -43,7 +43,7 @@ public class SpawnComponent : MonoBehaviour
     void Start()
     {
         _myTransform = transform;
-        _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval);
+        _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval); // intervalo aleatorio de tiempo de generación de la siguiente manzana
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class SpawnComponent : MonoBehaviour
             if (_timeToSpawn <= 0)
             {
                 _apple = Object.Instantiate(_applePrefab, _myTransform.position, Quaternion.identity); // se crea la manzana (si la pilla se vuelve null)
-                _apple.transform.parent = _myTransform; // para que se cree dentro de Level y funcione en el UnloadLevel();
+                _apple.transform.parent = _myTransform; // para que se cree dentro de Level y se destruya en el UnloadLevel();
                 _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval); // nuevo intervalo random
             }
         }

@@ -51,6 +51,7 @@ public class InputComponent : MonoBehaviour
     void Update()
     {
         _mousePosition = Input.mousePosition; //guarda su posicion
+
         if (Input.GetMouseButtonDown(0)) //si se pulsa click izdo
         {
             _worldPosition = _myScreenToWorldComp.ScreenToWorldPoint(_mousePosition); //pasa _mousePosition (2D) a posición en el Plane (3D)

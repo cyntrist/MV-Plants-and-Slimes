@@ -157,13 +157,6 @@ public class GameManager : MonoBehaviour
         {
             _remainingTime -= Time.deltaTime; // Cuenta atrás
 
-            if (_current >= _goal) // Si se alcanza la meta de manzanas, quita y repone un nivel aleatorio y actualiza los datos en el HUD
-            {
-                UnloadLevel();
-                LoadLevel();
-                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
-            }
-
             if (_remainingTime < 0) // Si se acaba el tiempo, salimos del estado de GAME e intentamos entrar en GAMEOVER
             {
                 ExitState(_currentState);
@@ -171,6 +164,13 @@ public class GameManager : MonoBehaviour
             }
             
             _UIManager.UpdateGameHUD(_current, _remainingTime); // Actualiza la información del HUD cada frame
+
+            if (_current >= _goal) // Si se alcanza la meta de manzanas, quita y repone un nivel aleatorio y actualiza los datos en el HUD
+            {
+                UnloadLevel();
+                LoadLevel();
+                _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
+            }
         }
     }
     /// <summary>
@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Requested state</param>
     public void RequestStateChange(GameManager.GameStates newState)
     {
-        _nextState = newState;
+        _nextState = newState;  // Método público para cambiar el valor privado de estado / podría llamarse SetNewState tambien?
     }
     /// <summary>
     /// Loads a new level choosing among the available levels.
@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
         _goal = _levels[rdm]._levelGoal;
         _current = 0;
 
-        // Avoiding undesired movement at Loading()
+        // Avoiding undesired movement at each LoadLevel() 
         _player.GetComponent<MovementComponent>().enabled = false;
     }
     /// <summary>
@@ -211,8 +211,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UnloadLevel()
     {
-        _player.SetActive(false); 
         Object.Destroy(_levelManager.gameObject);
+        _player.SetActive(false); 
     }
     #endregion
 
