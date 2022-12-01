@@ -72,15 +72,12 @@ public class PlantingComponent : MonoBehaviour
 
     public void TryPlant(Vector3 plantingPoint) // Si el punto es valido, va hasta el hasta que colisione y se ejecute OnTriggerEnter
     {
-        if (GameManager.Instance.Current > 0 && _plantingState == PlantingStates.None) // Si tiene manzanas y no está plantando
-        {
-            _desiredSoilComponent = EvaluatePoint(plantingPoint); // Raycast
-            if (_desiredSoilComponent != null)
-            {
-                _myMovementComponent.GoToPoint(plantingPoint); // Movimiento
-                _myInputComponent.enabled = false; // si cambia de trayecto en el camino nunca vuelve al estado inicial
-                _plantingState = PlantingStates.IsPlanting; // Cambio de estado
-            }
+        _desiredSoilComponent = EvaluatePoint(plantingPoint); // Raycast
+        if (GameManager.Instance.Current > 0 && _plantingState == PlantingStates.None && !_desiredSoilComponent.IsPlanted && _desiredSoilComponent != null)
+        { // Si tiene manzanas, Player no está plantando y el suelo no está plantado ni es nulo
+            _myMovementComponent.GoToPoint(plantingPoint); // Movimiento
+            _myInputComponent.enabled = false; // si cambia de trayecto en el camino nunca vuelve al estado inicial
+            _plantingState = PlantingStates.IsPlanting; // Cambio de estado
         }
     }
 
