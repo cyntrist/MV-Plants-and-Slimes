@@ -11,10 +11,9 @@ public class AppleComponent : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        if (gameManager != null)
+        if (GameManager.Instance != null)
         {
-            gameManager.OnPickApple();
+            GameManager.Instance.OnPickApple();
             Destroy(this.gameObject);
         }
     }
