@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -46,7 +43,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Public access to Current State / MÉTODO GETTER para recibir el valor en otros scripts
     /// </summary>
-    public GameManager.GameStates CurrentState { get { return _currentState; } } 
+    public GameManager.GameStates CurrentState { get { return _currentState; } }
     /// <summary>
     /// Level settings: Goal
     /// </summary>
@@ -100,7 +97,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnPlantApple()
     {
-        if (_current > 0) 
+        if (_current > 0)
         {
             _current--;
         }
@@ -118,13 +115,13 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">New state</param>
     public void EnterState(GameStates newState)
     {
-        switch(newState) // Diferentes comportamientos según estado al que se entra
+        switch (newState) // Diferentes comportamientos según estado al que se entra
         { // En sí, solo cambia el grupo de UI por cada estado y en GAME carga el nivel
             case GameStates.START:
                 _UIManager.SetMenu(GameStates.START);
                 break;
             case GameStates.GAME:
-                LoadLevel(); // debe ir primero para que entren los valores de LevelData y sean cargados ahora en el HUD
+                LoadLevel(); // debe ir primero para que entren los valores de LevelData y sean cargados ahora después en el HUD
 
                 _UIManager.SetMenu(GameStates.GAME);
                 _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime); // Inicializa el HUD
@@ -142,7 +139,7 @@ public class GameManager : MonoBehaviour
     /// <param name="newState">Exited game state</param>
     private void ExitState(GameStates newState)
     {
-        if (newState == GameStates.GAME) // ??? no estoy muy segura pero asi funciona guay, simplemente quita el nivel y el jugador
+        if (newState == GameStates.GAME) // simplemente quita el nivel y el jugador en GAME porque en el resto de estados no hace falta nada más?
         {
             UnloadLevel();
         }
@@ -153,7 +150,7 @@ public class GameManager : MonoBehaviour
     /// <param name="state">Current game state</param>
     private void UpdateState(GameStates state)
     {
-        if (_currentState == GameStates.GAME) // En el resto de estados no hace falta nada
+        if (_currentState == GameStates.GAME) // En el resto de estados no hace falta nada de momento
         {
             _remainingTime -= Time.deltaTime; // Cuenta atrás
 
@@ -162,7 +159,7 @@ public class GameManager : MonoBehaviour
                 ExitState(_currentState);
                 _nextState = GameStates.GAMEOVER;
             }
-            
+
             _UIManager.UpdateGameHUD(_current, _remainingTime); // Actualiza la información del HUD cada frame
 
             if (_current >= _goal) // Si se alcanza la meta de manzanas, quita y repone un nivel aleatorio y actualiza los datos en el HUD
@@ -196,7 +193,7 @@ public class GameManager : MonoBehaviour
         _levelManager.SetPlayer(_player);
         _player.SetActive(true);
 
-        // Setting the data up
+        // Setting the data up based on the random chosen level
         _nRound++;
         _remainingTime = _levels[rdm]._matchDuration;
         _goal = _levels[rdm]._levelGoal;
@@ -212,7 +209,7 @@ public class GameManager : MonoBehaviour
     private void UnloadLevel()
     {
         Object.Destroy(_levelManager.gameObject);
-        _player.SetActive(false); 
+        _player.SetActive(false);
     }
     #endregion
 
@@ -221,7 +218,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _currentState = GameStates.GAME;
+        _currentState = GameStates.GAME; // Valor dummy
         _nextState = GameStates.START; // Estado inicial, es diferente al current para que el EnterState del primer update se realice
     }
 

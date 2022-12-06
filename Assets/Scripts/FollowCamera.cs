@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
@@ -41,7 +39,7 @@ public class FollowCamera : MonoBehaviour
     {
         _myTransform = transform;
         _myTransform.LookAt(_targetTransform.position + _lookatVerticalOffset * Vector3.up); // rotation
-        _myTransform.position = new Vector3(_targetTransform.position.x, _targetTransform.position.y + _verticalOffset, _targetTransform.position.z - _horizontalOffset); // sets position to target position
+        _myTransform.position = new(_targetTransform.position.x, _targetTransform.position.y + _verticalOffset, _targetTransform.position.z - _horizontalOffset); // sets position to target position
     }
 
     /// <summary>
@@ -49,7 +47,7 @@ public class FollowCamera : MonoBehaviour
     /// </summary>
     void LateUpdate()
     { // interpola entre la posición actual y la siguiente en base al tiempo y al followFactor
-        Vector3 interpolationVector = new Vector3(_targetTransform.position.x, _targetTransform.position.y + _verticalOffset, _targetTransform.position.z - _horizontalOffset); // sets destination vector (end of interpolation) to target position
+        Vector3 interpolationVector = new(_targetTransform.position.x, _targetTransform.position.y + _verticalOffset, _targetTransform.position.z - _horizontalOffset); // sets destination vector (end of interpolation) to target position
         _myTransform.position = Vector3.Lerp(_myTransform.position, interpolationVector, _followFactor * Time.deltaTime); // interpolates current position to destination position
     }
 }

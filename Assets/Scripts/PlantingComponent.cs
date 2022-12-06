@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlantingComponent : MonoBehaviour
@@ -60,7 +58,7 @@ public class PlantingComponent : MonoBehaviour
         Ray ray = new(_camera.transform.position, (pointToEvaluate - _camera.transform.position).normalized);
         if (Physics.Raycast(ray, out _myHitInfo, Mathf.Infinity, _myLayerMask))
         { // raycast desde la posición de la cámara en dirección del vector normal hacia el punto a evaluar  (layer soil: 8)
-            return _myHitInfo.collider.GetComponent<SoilComponent>(); 
+            return _myHitInfo.collider.GetComponent<SoilComponent>();
         }
         return null; // si no colisiona con nada
     }
@@ -73,8 +71,8 @@ public class PlantingComponent : MonoBehaviour
     public void TryPlant(Vector3 plantingPoint) // Si el punto es valido, va hasta el hasta que colisione y se ejecute OnTriggerEnter
     {
         _desiredSoilComponent = EvaluatePoint(plantingPoint); // Raycast
-        if (GameManager.Instance.Current > 0 && _plantingState == PlantingStates.None && !_desiredSoilComponent.IsPlanted && _desiredSoilComponent != null)
-        { // Si tiene manzanas, Player no está plantando y el suelo no está plantado ni es nulo
+        if (GameManager.Instance.Current > 0 && _plantingState == PlantingStates.None && _desiredSoilComponent != null && !_desiredSoilComponent.IsPlanted)
+        { // Si tiene manzanas, Player no está plantando y el suelo no es nulo ni está plantado
             _myMovementComponent.GoToPoint(plantingPoint); // Movimiento
             _myInputComponent.enabled = false; // si cambia de trayecto en el camino nunca vuelve al estado inicial
             _plantingState = PlantingStates.IsPlanting; // Cambio de estado
@@ -102,7 +100,7 @@ public class PlantingComponent : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-        _myLayerMask = 1 << 8;
+        _myLayerMask = 1 << 8; // Capa de colisión con Soil: 8 (Soil)
         _myMovementComponent = GetComponent<MovementComponent>();
         _myInputComponent = GetComponent<InputComponent>();
         _plantingState = PlantingStates.None;

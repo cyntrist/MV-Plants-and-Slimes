@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementComponent : MonoBehaviour
@@ -31,10 +29,7 @@ public class MovementComponent : MonoBehaviour
     /// Target point the player wants to move towards
     /// </summary>
     private Vector3 _myTargetPoint;
-    /// <summary>
-    /// Movement speed vector
-    /// </summary>
-    private Vector3 _movementSpeedVector; // UNUSED
+    // _movementSpeedVector was removed due to being unused
     #endregion
 
     #region methods
@@ -42,10 +37,10 @@ public class MovementComponent : MonoBehaviour
     /// Method to move towards desired point
     /// </summary>
     /// <param name="targetPoint"></param>
-    public void GoToPoint(Vector3 targetPoint) 
+    public void GoToPoint(Vector3 targetPoint)
     {
         _myTargetPoint = targetPoint;
-        enabled = true; //cuando reciba input, se activara
+        enabled = true; // cuando reciba input, se activara
     }
     #endregion
 
@@ -71,8 +66,6 @@ public class MovementComponent : MonoBehaviour
             _myCharacterController.Move(offset * Time.deltaTime);
         }
         else
-        {
             enabled = false;
-        }
     }
 }

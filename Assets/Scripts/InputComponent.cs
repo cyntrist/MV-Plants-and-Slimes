@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ScreenToWorldComponent))]
@@ -54,8 +52,8 @@ public class InputComponent : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) //si se pulsa click izdo
         {
-            _worldPosition = _myScreenToWorldComp.ScreenToWorldPoint(_mousePosition); //pasa _mousePosition (2D) a posición en el Plane (3D)
-            _myMovementComponent.GoToPoint(_worldPosition); //GoToPoint() del _worldPosition (3D)
+            _worldPosition = _myScreenToWorldComp.ScreenToWorldPoint(_mousePosition); // pasa _mousePosition (2D) a posición en el Ground (3D)
+            _myMovementComponent.GoToPoint(_worldPosition); // intenta ir (GoToPoint()) al _worldPosition (3D)
         }
 
         if (Input.GetMouseButtonDown(1)) // click dcho

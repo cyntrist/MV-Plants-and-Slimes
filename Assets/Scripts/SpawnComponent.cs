@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnComponent : MonoBehaviour
@@ -56,8 +54,8 @@ public class SpawnComponent : MonoBehaviour
             _timeToSpawn -= Time.deltaTime; // cuenta atrás
             if (_timeToSpawn <= 0)
             {
-                _apple = Object.Instantiate(_applePrefab, _myTransform.position, Quaternion.identity); // se crea la manzana (si la pilla se vuelve null)
-                _apple.transform.parent = _myTransform; // para que se cree dentro de Level y se destruya en el UnloadLevel();
+                _apple = Object.Instantiate(_applePrefab, _myTransform.position, Quaternion.identity); // se crea la manzana 
+                _apple.transform.parent = _myTransform; // para que sea hija y cree dentro de Level y se destruya en el UnloadLevel();
                 _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval); // nuevo intervalo random
             }
         }

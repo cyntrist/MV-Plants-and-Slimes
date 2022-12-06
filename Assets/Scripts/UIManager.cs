@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -65,7 +62,7 @@ public class UIManager : MonoBehaviour
     public void UpdateGameHUD(int currentApples, float remainingTime) // Actualiza en cada frame el valor del tiempo y las manzanas
     {
         _currentTMP.text = "Manzanas: " + currentApples.ToString();
-        _remainingTimeTMP.text = "Tiempo restante: " + (int) remainingTime;
+        _remainingTimeTMP.text = "Tiempo restante: " + (int)remainingTime;
     }
     /// <summary>
     /// Sets up HUD after Level's load
@@ -84,10 +81,10 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="newMenu">New menu Game State</param>
     public void SetMenu(GameManager.GameStates newMenu)
-    { // desactiva el menú anterior, actualiza el actual y activa el actual
-        _menus[(int) _activeMenu].SetActive(false);
+    { // desactiva el menú anterior, actualiza el actual y lo activa
+        _menus[(int)_activeMenu].SetActive(false);
         _activeMenu = newMenu;
-        _menus[(int)_activeMenu].SetActive(true); 
+        _menus[(int)_activeMenu].SetActive(true);
     }
     #endregion
 

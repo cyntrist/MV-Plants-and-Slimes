@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SoilComponent : MonoBehaviour
@@ -36,7 +34,9 @@ public class SoilComponent : MonoBehaviour
         {
             GameManager.Instance.OnPlantApple(); // Resta una manzana
             _isPlanted = true; // Este soil queda plantado
-            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0)).transform.parent = _myTransform; // Instanciación del prefab Plant a 180º de su ángulo normal (mótivos meramente estéticos) en la posición del Soil
+            // Instanciación del prefab Plant a 180º de su ángulo normal (mótivos solo estéticos) en la posición del Soil dándole
+            // como padre este Soil para que se incluya dentro de las instanciaciones de Level y funcione con UnloadLevel()
+            Instantiate(newPlantPrefab, _myTransform.position, Quaternion.Euler(0, 180f, 0)).transform.parent = _myTransform;
         }
     }
     #endregion

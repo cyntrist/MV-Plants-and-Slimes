@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ScreenToWorldComponent : MonoBehaviour
@@ -16,10 +14,7 @@ public class ScreenToWorldComponent : MonoBehaviour
     /// Reference to camera
     /// </summary>
     private Camera _camera;
-    /// <summary>
-    /// References to camera transform
-    /// </summary>
-    private Transform _cameraTransform; // UNUSED
+    // _cameraTransform was removed because it was unused
     #endregion
 
     #region properties
@@ -46,10 +41,8 @@ public class ScreenToWorldComponent : MonoBehaviour
         {
             return _myRaycastHit.point; // devuelve la posición de colisión
         }
-        else //new
-        {
-            return transform.position; // se queda en el sitio si no choca
-        }
+        else
+            return transform.position; // se queda en el sitio actual si no choca
     }
     #endregion
 

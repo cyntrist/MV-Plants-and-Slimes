@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -19,7 +17,7 @@ public class LevelManager : MonoBehaviour
     public void SetPlayer(GameObject player)
     {
         // Primero registra este level manager en la instancia del game manager
-        GameManager.Instance.RegisterLevelManager(this); 
+        GameManager.Instance.RegisterLevelManager(this);
 
         // Enables the player and sets its transform up
         player.transform.position = _spawnPoint.transform.position;
