@@ -49,7 +49,7 @@ public class MovementComponent : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _myTransform = GetComponent<Transform>();
+        _myTransform = transform;
         _myCharacterController = GetComponent<CharacterController>();
         enabled = false; // desactiva este componente al empezar
     }
